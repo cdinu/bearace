@@ -20,9 +20,8 @@ int main() {
 
     // Data structure to store clientID as key and average sum as value
     std::unordered_map<std::string, double> averageSum;
-
-    // Skip the first line
-    getline(file, line);
+	
+    getline(file, line); // Skip the first line
 
     // Read data, line by line
 	while (getline(file, line)) {
@@ -43,14 +42,9 @@ int main() {
 		    double consumptionValue = std::stod(parsedRow[3]); // Assuming the 4th column is 'elec_active_import_profile_hh_wh'
 		    consumption[puprn] += consumptionValue;
 		} catch (const std::invalid_argument& ia) {
-		    // Handle the case where the string could not be converted
-		    // std::cerr << "Invalid argument: " << ia.what() << " for PUPRN " << puprn << " arg " << parsedRow[3] << std::endl;
-		    // std::cerr << line << std::endl;
-		    // break;
-		    // You could also decide to continue with the next line or handle the error as needed
+			// FIXME: Handle the case where the string could not be converted
 		}
 	    } else {
-		// Handle the case where the row does not have enough columns
 		std::cerr << "Invalid row: " << line << std::endl;
 	    }
 	}

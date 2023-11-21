@@ -35,20 +35,9 @@ def create_test_dataset(n: int, output_path: Path):
 
 
 def convert_to_parquet(csv_path: Path, parquet_path: Path, chunk_size: int = 1_000_000):
-    csv_iter = pl.scan_csv(csv_path)
-    parquet_writer = None
-
-    for df_chunk in csv_iter:
-        if parquet_writer is None:
-            parquet_writer = pl.ParquetWriter(parquet_path, df_chunk.schema)
-
-        parquet_writer.write(df_chunk)
-        print("Chunk written")
-
-    if parquet_writer is not None:
-        parquet_writer.close()
-
-    print(f"Dataset converted to Parquet at {parquet_path}")
+    # works for smaller files
+    df = pl.read_csv(csv_path)
+    df.write_parquet(parquet_path, compression="snappy")
 
 
 if __name__ == "__main__":
@@ -60,5 +49,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # create_test_dataset(n=args.num_rows, output_path=args.output_path)
+    create_test_dataset(n=args.num_rows, output_path=args.output_path)
     convert_to_parquet(csv_path=args.output_path, parquet_path=args.parquet_path)
